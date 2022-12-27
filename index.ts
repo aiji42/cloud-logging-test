@@ -38,5 +38,9 @@ app.get("/winston/error", (req, res) => {
   winstonLogger.error({ message: "this is error object" });
   winstonLogger.error(new Error("this is error instance"));
 
+  res.status(500).send(JSON.stringify({ message: "warn" }));
+});
+
+app.get("/critical", (req, res) => {
   throw new Error("クリティカル");
 });
