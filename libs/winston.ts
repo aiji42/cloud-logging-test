@@ -43,7 +43,7 @@ const errorReport = winston.format((info) => {
 export const winstonLoggerErrorReport = winston.createLogger({
   level: "info",
   format: winston.format.combine(
-    severity(),
+    // severity(),
     errorReport(),
     winston.format.json()
   ),
