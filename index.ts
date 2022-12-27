@@ -1,6 +1,7 @@
 import express from "express";
 import { winstonLogger } from "./libs/winston";
 import { bunyanLogger } from "./libs/bunyan";
+import { pinoLogger } from "./libs/pino";
 
 console.error("this is test error");
 console.log(
@@ -62,6 +63,30 @@ app.get("/bunyan/error", (req, res) => {
   bunyanLogger.error("this is simple error string.");
   bunyanLogger.error({ message: "this is error object" });
   bunyanLogger.error(new Error("this is error instance"));
+
+  res.status(500).send(JSON.stringify({ message: "error" }));
+});
+
+app.get("/pino/info", (req, res) => {
+  pinoLogger.info("this is simple info string.");
+  pinoLogger.info({ message: "this is info object" });
+  pinoLogger.info(new Error("this is info instance"));
+
+  res.send(JSON.stringify({ message: "info" }));
+});
+
+app.get("/pino/warn", (req, res) => {
+  pinoLogger.warn("this is simple warn string.");
+  pinoLogger.warn({ message: "this is warn object" });
+  pinoLogger.warn(new Error("this is warn instance"));
+
+  res.send(JSON.stringify({ message: "warn" }));
+});
+
+app.get("/pino/error", (req, res) => {
+  pinoLogger.error("this is simple error string.");
+  pinoLogger.error({ message: "this is error object" });
+  pinoLogger.error(new Error("this is error instance"));
 
   res.status(500).send(JSON.stringify({ message: "error" }));
 });
