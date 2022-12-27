@@ -29,7 +29,13 @@ export const winstonLoggerSeverity = winston.createLogger({
 });
 
 const errorReport = winston.format((info) => {
-  if (info instanceof Error) info.name = info.name;
+  if (info instanceof Error) {
+    info.err = {
+      name: info.name,
+      message: info.message,
+      stack: info.stack,
+    };
+  }
 
   return info;
 });
@@ -39,7 +45,6 @@ export const winstonLoggerErrorReport = winston.createLogger({
   format: winston.format.combine(
     severity(),
     errorReport(),
-    winston.format.errors({ stack: true }),
     winston.format.json()
   ),
   transports: [new winston.transports.Console()],
