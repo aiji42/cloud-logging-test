@@ -1,6 +1,8 @@
 import express from "express";
 import { winstonLogger } from "./libs/winston";
 
+console.error("this is test error");
+
 const app = express();
 
 const port = Number(process.env.PORT || 3000);
