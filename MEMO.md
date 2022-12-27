@@ -32,6 +32,7 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 - いくつかあるが、現実的な形式は下記の通り
 
 ただし、この方法だと発生場所等が正しくマークされない
+というかいろんなエラーが一つにまとまってしまう？
 ```
 {
   "@type": "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
@@ -129,3 +130,8 @@ logger.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting:
 logger.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
 logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○ 
 ```
+
+### カスタム
+
+フォーマットの変更ができないので、severityの設定ができない  
+(フィードを追加することはできるが、現在のlevelからseverityを動的に出し分けるということができない)

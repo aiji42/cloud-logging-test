@@ -1,5 +1,5 @@
 import express from "express";
-import { winstonLogger, winstonLoggerErrorReport } from "./libs/winston";
+import { winstonLoggerErrorReport } from "./libs/winston";
 import { bunyanLogger } from "./libs/bunyan";
 import { pinoLogger } from "./libs/pino";
 import { loglevelLogger } from "./libs/loglevel";
