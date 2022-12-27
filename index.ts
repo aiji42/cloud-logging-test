@@ -2,6 +2,12 @@ import express from "express";
 import { winstonLogger } from "./libs/winston";
 
 console.error("this is test error");
+console.log(
+  JSON.stringify({
+    severity: "ERROR",
+    message: "This is testing a structured log error for GCP",
+  })
+);
 
 const app = express();
 
