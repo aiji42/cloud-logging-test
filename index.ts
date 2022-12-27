@@ -42,5 +42,5 @@ app.get("/winston/error", (req, res) => {
 });
 
 app.get("/critical", (req, res) => {
-  throw new Error("クリティカル");
+  throw new Error("Critical error");
 });
