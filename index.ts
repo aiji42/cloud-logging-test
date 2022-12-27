@@ -1,7 +1,7 @@
 import express from "express";
-import { winstonLoggerErrorReport } from "./libs/winston";
+import { winstonLogger, winstonLoggerErrorReport } from "./libs/winston";
 import { bunyanLogger } from "./libs/bunyan";
-import { pinoLogger } from "./libs/pino";
+import { pinoLogger, pinoLoggerSeverity } from "./libs/pino";
 import { loglevelLogger } from "./libs/loglevel";
 
 // https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
@@ -23,6 +23,17 @@ app.listen(port, () => {
 });
 
 app.get("/winston", (req, res) => {
+  winstonLogger.info("winston: this is simple info string.");
+  winstonLogger.info(new Error("winston: this is info instance"));
+  winstonLogger.warn("winston: this is simple warn string.");
+  winstonLogger.warn(new Error("winston: this is warn instance"));
+  winstonLogger.error("winston: this is simple error string.");
+  winstonLogger.error(new Error("winston: this is error instance"));
+
+  res.send(JSON.stringify({ message: "winston" }));
+});
+
+app.get("/winston/custom", (req, res) => {
   winstonLoggerErrorReport.info("winston: this is simple info string.");
   winstonLoggerErrorReport.info(new Error("winston: this is info instance"));
   winstonLoggerErrorReport.warn("winston: this is simple warn string.");
@@ -51,6 +62,17 @@ app.get("/pino", (req, res) => {
   pinoLogger.warn(new Error("pino: this is warn instance"));
   pinoLogger.error("pino: this is simple error string.");
   pinoLogger.error(new Error("pino: this is error instance"));
+
+  res.send(JSON.stringify({ message: "pino" }));
+});
+
+app.get("/pino/custom", (req, res) => {
+  pinoLoggerSeverity.info("pino: this is simple info string.");
+  pinoLoggerSeverity.info(new Error("pino: this is info instance"));
+  pinoLoggerSeverity.warn("pino: this is simple warn string.");
+  pinoLoggerSeverity.warn(new Error("pino: this is warn instance"));
+  pinoLoggerSeverity.error("pino: this is simple error string.");
+  pinoLoggerSeverity.error(new Error("pino: this is error instance"));
 
   res.send(JSON.stringify({ message: "pino" }));
 });
