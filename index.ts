@@ -2,6 +2,9 @@ import express from "express";
 import { winstonLogger } from "./libs/winston";
 import { bunyanLogger } from "./libs/bunyan";
 import { pinoLogger } from "./libs/pino";
+import { loglevelLogger } from "./libs/loglevel";
+
+// https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
 console.error("this is test error");
 console.log(
@@ -87,6 +90,30 @@ app.get("/pino/error", (req, res) => {
   pinoLogger.error("this is simple error string.");
   pinoLogger.error({ message: "this is error object" });
   pinoLogger.error(new Error("this is error instance"));
+
+  res.status(500).send(JSON.stringify({ message: "error" }));
+});
+
+app.get("/loglevel/info", (req, res) => {
+  loglevelLogger.info("this is simple info string.");
+  loglevelLogger.info({ message: "this is info object" });
+  loglevelLogger.info(new Error("this is info instance"));
+
+  res.send(JSON.stringify({ message: "info" }));
+});
+
+app.get("/loglevel/warn", (req, res) => {
+  loglevelLogger.warn("this is simple warn string.");
+  loglevelLogger.warn({ message: "this is warn object" });
+  loglevelLogger.warn(new Error("this is warn instance"));
+
+  res.send(JSON.stringify({ message: "warn" }));
+});
+
+app.get("/loglevel/error", (req, res) => {
+  loglevelLogger.error("this is simple error string.");
+  loglevelLogger.error({ message: "this is error object" });
+  loglevelLogger.error(new Error("this is error instance"));
 
   res.status(500).send(JSON.stringify({ message: "error" }));
 });
