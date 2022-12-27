@@ -29,7 +29,7 @@ export const winstonLoggerSeverity = winston.createLogger({
 });
 
 const errorReport = winston.format((info) => {
-  if (info.level === "error") info.type = "Error";
+  if (info instanceof Error) info.name = info.name;
 
   return info;
 });
