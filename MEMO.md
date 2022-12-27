@@ -11,7 +11,7 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
 **スタック トレースまたは例外を含むログエントリ**
 
-※severityが設定されているときはERRORのときのみErrorReportingされる
+※severityが設定されているときはERRORのときのみErrorReportingされる？
 
 この条件に当てはまるのは下記のどちらか
 - プレーンテキストでErrorを出力
@@ -29,8 +29,9 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
 **ReportedErrorEvent のような形式のログエントリ**
 
-- いくつかあるが、現実的な形式は下記の通り?
+- いくつかあるが、現実的な形式は下記の通り
 
+ただし、この方法だと発生場所等が正しくマークされない
 ```
 {
   "@type": "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
@@ -41,7 +42,7 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 ## Winston
 
 ### カスタムなし
-(Errorオブジェクトをそのまま投げても出力されないので、`format.errors({ stack: true })`でフォーマットする)
+(Errorオブジェクトをそのまま投げても出力されないので、`format.errors({ stack: true })`でフォーマット必要)
 
 - severity が設定されていないのでどのログレベルでもDEFAULTになる
 - `format.errors({ stack: true })`はmessageとstackを出力するだけなので、ErrorReportは生成されない
@@ -62,6 +63,51 @@ logger.warn('error massage')             // 重要度: DEFAULT | ErrorReporting:
 logger.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting:
 logger.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
 logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: 
+```
+
+### カスタム
+
+- levelに応じて`severity`を付与することで重要度適切に設定される
+- Errorは `{ err: { ... } }` で出力されるので ErrorReporting が生成される
+    - severity が設定されているので、ERROR のときのみ生成される
+
+```ts
+const severity = winston.format((info) => {
+  let level = info.level.toUpperCase();
+  if (level === "VERBOSE") {
+    level = "DEBUG";
+  }
+  info.severity = level;
+  return info;
+});
+
+const errorReport = winston.format((info) => {
+  if (info instanceof Error) {
+    info.err = {
+      name: info.name,
+      message: info.message,
+      stack: info.stack,
+    };
+  }
+  return info;
+});
+
+export const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    severity(),
+    errorReport(),
+    winston.format.json()
+  ),
+  transports: [new winston.transports.Console()],
+});
+
+logger.info('error massage')             // 重要度: INFO  | ErrorReporting: 
+logger.info(new Error('error message'))  // 重要度: INFO  | ErrorReporting:
+logger.warn('error massage')             // 重要度: WARN  | ErrorReporting: 
+logger.warn(new Error('error message'))  // 重要度: WARN  | ErrorReporting:
+logger.error('error massage')            // 重要度: ERROR | ErrorReporting:
+logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: ○ 
 ```
 
 ## Bunyan

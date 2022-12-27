@@ -30,10 +30,12 @@ export const winstonLoggerSeverity = winston.createLogger({
 
 const errorReport = winston.format((info) => {
   if (info instanceof Error) {
-    info["@type"] =
-      "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent";
+    info.err = {
+      name: info.name,
+      message: info.message,
+      stack: info.stack,
+    };
   }
-
   return info;
 });
 
@@ -43,7 +45,6 @@ export const winstonLoggerErrorReport = winston.createLogger({
     // severity をつけていると Error Reportingに入るのは ERRORのみ
     severity(),
     errorReport(),
-    winston.format.errors({ stack: true }),
     winston.format.json()
   ),
   transports: [new winston.transports.Console()],
