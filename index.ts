@@ -1,5 +1,6 @@
 import express from "express";
 import { winstonLogger } from "./libs/winston";
+import { bunyanLogger } from "./libs/bunyan";
 
 console.error("this is test error");
 console.log(
@@ -38,7 +39,31 @@ app.get("/winston/error", (req, res) => {
   winstonLogger.error({ message: "this is error object" });
   winstonLogger.error(new Error("this is error instance"));
 
-  res.status(500).send(JSON.stringify({ message: "warn" }));
+  res.status(500).send(JSON.stringify({ message: "error" }));
+});
+
+app.get("/bunyan/info", (req, res) => {
+  bunyanLogger.info("this is simple info string.");
+  bunyanLogger.info({ message: "this is info object" });
+  bunyanLogger.info(new Error("this is info instance"));
+
+  res.send(JSON.stringify({ message: "info" }));
+});
+
+app.get("/bunyan/warn", (req, res) => {
+  bunyanLogger.warn("this is simple warn string.");
+  bunyanLogger.warn({ message: "this is warn object" });
+  bunyanLogger.warn(new Error("this is warn instance"));
+
+  res.send(JSON.stringify({ message: "warn" }));
+});
+
+app.get("/bunyan/error", (req, res) => {
+  bunyanLogger.error("this is simple error string.");
+  bunyanLogger.error({ message: "this is error object" });
+  bunyanLogger.error(new Error("this is error instance"));
+
+  res.status(500).send(JSON.stringify({ message: "error" }));
 });
 
 app.get("/critical", (req, res) => {
