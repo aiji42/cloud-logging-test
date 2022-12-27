@@ -10,11 +10,7 @@ export const winstonLogger = winston.createLogger({
 });
 
 const severity = winston.format((info) => {
-  let level = info.level.toUpperCase();
-  if (level === "VERBOSE") {
-    level = "DEBUG";
-  }
-  info["severity"] = level;
+  info["severity"] = info.level.toUpperCase();
   return info;
 });
 

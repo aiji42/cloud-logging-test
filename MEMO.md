@@ -74,11 +74,7 @@ logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting:
 
 ```ts
 const severity = winston.format((info) => {
-  let level = info.level.toUpperCase();
-  if (level === "VERBOSE") {
-    level = "DEBUG";
-  }
-  info.severity = level;
+  info["severity"] = info.level.toUpperCase();
   return info;
 });
 
@@ -135,3 +131,45 @@ logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting:
 
 フォーマットの変更ができないので、severityの設定ができない  
 (フィードを追加することはできるが、現在のlevelからseverityを動的に出し分けるということができない)
+
+## pino
+
+### カスタムなし
+- severity が設定されていないのでどのログレベルでもDEFAULTになる
+- Errorは `{ err: { ... } }` で出力されるので ErrorReporting に通知される
+
+```ts
+const logger = pino({
+  level: "info",
+});
+
+logger.info('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+logger.info(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+logger.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+logger.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+logger.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
+logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○ 
+```
+
+### カスタム
+
+- xxxxxxx
+- xxxxxxx
+
+```ts
+const labels = pino().levels.labels;
+
+export const logger = pino({
+  level: "info",
+  mixin: (_, level) => {
+    return { severity: labels[level].toUpperCase() };
+  },
+});
+
+logger.info('error massage')             // 重要度: INFO  | ErrorReporting: 
+logger.info(new Error('error message'))  // 重要度: INFO  | ErrorReporting:
+logger.warn('error massage')             // 重要度: WARN  | ErrorReporting: 
+logger.warn(new Error('error message'))  // 重要度: WARN  | ErrorReporting:
+logger.error('error massage')            // 重要度: ERROR | ErrorReporting:
+logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: ○ 
+```
