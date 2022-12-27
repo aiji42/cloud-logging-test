@@ -11,8 +11,6 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
 **スタック トレースまたは例外を含むログエントリ**
 
-※severityが設定されているときはERRORのときのみErrorReportingされる？
-
 この条件に当てはまるのは下記のどちらか
 - プレーンテキストでErrorを出力
 - 下記形式のオブジェクトデータ
@@ -26,6 +24,9 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
   }
 }
 ```
+
+※severityが設定されているときはERRORのときのみErrorReportingされる
+
 
 **ReportedErrorEvent のような形式のログエントリ**
 
@@ -111,7 +112,7 @@ logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: �
 
 ### カスタムなし
 - severity が設定されていないのでどのログレベルでもDEFAULTになる
-- Errorは `{ err: { ... } }` で出力されるので ErrorReporting に通知される
+- Errorは `{ err: { ... } }` で出力されるので ErrorReporting が生成される
 
 ```ts
 const logger = bunyan.createLogger({
@@ -136,7 +137,7 @@ logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting:
 
 ### カスタムなし
 - severity が設定されていないのでどのログレベルでもDEFAULTになる
-- Errorは `{ err: { ... } }` で出力されるので ErrorReporting に通知される
+- Errorは `{ err: { ... } }` で出力されるので ErrorReporting が生成される
 
 ```ts
 const logger = pino({
@@ -153,8 +154,9 @@ logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting:
 
 ### カスタム
 
-- xxxxxxx
-- xxxxxxx
+- levelに応じて`severity`を付与することで重要度適切に設定される
+- Errorは `{ err: { ... } }` で出力されるので ErrorReporting が生成される
+  - severity が設定されているので、ERROR のときのみ生成される
 
 ```ts
 const labels = pino().levels.labels;
