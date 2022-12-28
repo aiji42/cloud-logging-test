@@ -3,8 +3,6 @@ https://qiita.com/suin/items/d5d5d7199b62eed63bde
 
 > JavaScriptのConsole APIのメソッドの違いは、基本的にGCPの重大度に影響しません。ただし、console.warnとconsole.errorがErrorオブジェクトをロギングした場合に限り、重大度が「ERROR」になります。
 
-TODO: loggerも大抵は同様だが、どこまで同じかを確かめる
-
 ## Error reporting
 
 https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
@@ -294,13 +292,34 @@ logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: �
 ```
 
 pinoは、デフォルトのメッセージキーが`msg`となっており、`messageKey: 'message'`としてやる必要があるが、  
-そうなると、今度は例外を処理する場合に、`err`と`message`が競合してしまうために、
+そうなると、今度は例外を処理する場合に、`err`と`message`が競合してしまうために、ErrorReportingは生成されれるが、スタックトレースが正しく記録されなくなってしまた。  
+正しく transport api などを使用すれば、競合しないようにできるのかもしれないが、一旦これ以上の追求はやめておく。
+
+```ts
+const logger = pino({
+  level: "info",
+  messageKey: "message",
+  mixin: (context, level) => {
+    if (labels[level] === "error")
+      return {
+        severity: labels[level].toUpperCase(),
+        "@type":
+          "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
+      };
+    return { severity: labels[level].toUpperCase() };
+  },
+});
+```
+
+出力結果 (`err`よりも、`message` が優先されてErrorReportが生成されてしまう)
 ```
 {
   "err": {
-    ...
+    "message": "..."
+    "name": "..."
+    "stack": "..."
   },
-  "message": "...",
-
+  "message": "err.messageと同じものが入る",
+  "@type": "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent"
 }
 ```
