@@ -3,7 +3,7 @@ const makeLogger = (severity: "INFO" | "WARN" | "ERROR") => {
     console.log(
       JSON.stringify({
         severity,
-        message: entry instanceof Error ? entry.stack : String(entry),
+        message: entry instanceof Error ? entry.stack : entry,
         ...meta,
       })
     );
