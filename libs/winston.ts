@@ -35,7 +35,8 @@ const errorReport = winston.format((info) => {
   if (info.level === "error") {
     info["@type"] =
       "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent";
-    info.message = JSON.stringify(info.message);
+    if (typeof info.message === "object")
+      info.message = JSON.stringify(info.message);
   }
   return info;
 });
