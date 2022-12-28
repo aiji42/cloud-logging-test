@@ -45,12 +45,12 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 - ErrorはtextPayloadで文字列として表示されるので、ErrorReportが生成される
 
 ```ts
-console.log('error massage')             // 重要度: DEFAULT | ErrorReporting: 
-console.log(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+console.log('error massage')              // 重要度: DEFAULT | ErrorReporting: 
+console.log(new Error('error message'))   // 重要度: ERROR   | ErrorReporting: ○
 console.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
-console.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+console.warn(new Error('error message'))  // 重要度: ERROR   | ErrorReporting: ○
 console.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
-console.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○
+console.error(new Error('error message')) // 重要度: ERROR   | ErrorReporting: ○
 ```
 
 ### カスタム
@@ -74,12 +74,12 @@ const logger = {
   error: makeLogger("ERROR"),
 };
 
-logger.info('error massage')             // 重要度: DEFAULT | ErrorReporting: 
-logger.info(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting:
-logger.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
-logger.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting:
-logger.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
-logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○
+logger.info('error massage')             // 重要度: INFO    | ErrorReporting: 
+logger.info(new Error('error message'))  // 重要度: INFO    | ErrorReporting:
+logger.warn('error massage')             // 重要度: WARN    | ErrorReporting: 
+logger.warn(new Error('error message'))  // 重要度: WARN    | ErrorReporting:
+logger.error('error massage')            // 重要度: ERROR   | ErrorReporting:
+logger.error(new Error('error message')) // 重要度: ERROR   | ErrorReporting: ○
 ```
 
 ## Winston

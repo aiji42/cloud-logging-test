@@ -59,6 +59,20 @@ app.get("/winston/custom", (req, res) => {
   res.send(JSON.stringify({ message: "winston" }));
 });
 
+app.get("/winston/custom2", (req, res) => {
+  winstonLoggerErrorReport.info({
+    error_text: "winston: this is simple info string.",
+  });
+  winstonLoggerErrorReport.warn({
+    error_text: "winston: this is simple warn string.",
+  });
+  winstonLoggerErrorReport.error({
+    error_text: "winston: this is simple error string.",
+  });
+
+  res.send(JSON.stringify({ message: "winston" }));
+});
+
 app.get("/bunyan", (req, res) => {
   bunyanLogger.info("bunyan: this is simple info string.");
   bunyanLogger.info(new Error("bunyan: this is info instance"));
