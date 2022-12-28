@@ -41,6 +41,10 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 }
 ```
 
+## Console
+
+
+
 ## Winston
 
 ### カスタムなし
@@ -179,7 +183,7 @@ logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: �
 ## loglevel
 
 ### カスタムなし
-- severity が設定されていないのでどのログレベルでもDEFAULTになる
+- ログレベルによらずErrorを出力した場合にはエラーになる。それ以外はデフォルト
 - Errorはテキストに変換されるため ErrorReporting が生成される
 
 ```ts
@@ -187,9 +191,12 @@ loglevel.setLevel('info')
 const logger = loglevel;
 
 logger.info('error massage')             // 重要度: DEFAULT | ErrorReporting: 
-logger.info(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+logger.info(new Error('error message'))  // 重要度: ERROR   | ErrorReporting: ○
 logger.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
-logger.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+logger.warn(new Error('error message'))  // 重要度: ERROR   | ErrorReporting: ○
 logger.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
-logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○ 
+logger.error(new Error('error message')) // 重要度: ERROR   | ErrorReporting: ○ 
 ```
+### カスタム
+
+出力データを構造化できないのでこれ以上のカスタマイズは不可能

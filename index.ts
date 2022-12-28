@@ -22,6 +22,17 @@ app.listen(port, () => {
   console.log(`Start on port ${port} 🚀`);
 });
 
+app.get("/console", (req, res) => {
+  console.info("console: this is simple info string.");
+  console.info(new Error("console: this is info instance"));
+  console.warn("console: this is simple warn string.");
+  console.warn(new Error("console: this is warn instance"));
+  console.error("console: this is simple error string.");
+  console.error(new Error("console: this is error instance"));
+
+  res.send(JSON.stringify({ message: "console" }));
+});
+
 app.get("/winston", (req, res) => {
   winstonLogger.info("winston: this is simple info string.");
   winstonLogger.info(new Error("winston: this is info instance"));
