@@ -7,14 +7,6 @@ import { consoleLogger } from "./libs/console";
 
 // https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
-console.error("this is test error");
-console.log(
-  JSON.stringify({
-    severity: "ERROR",
-    message: "This is testing a structured log error for GCP",
-  })
-);
-
 const app = express();
 
 const port = Number(process.env.PORT || 3000);
