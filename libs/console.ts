@@ -1,9 +1,16 @@
+const messagify = (entry: any) => {
+  if (entry instanceof Error) {
+    return entry.stack;
+  }
+  return String(entry);
+};
+
 export const consoleLogger = {
   info: (entry: any, meta?: Record<string, any>) => {
     console.log(
       JSON.stringify({
         severity: "INFO",
-        message: String(entry),
+        message: messagify(entry),
         ...meta,
       })
     );
@@ -12,7 +19,7 @@ export const consoleLogger = {
     console.log(
       JSON.stringify({
         severity: "WARN",
-        message: String(entry),
+        message: messagify(entry),
         ...meta,
       })
     );
@@ -21,7 +28,7 @@ export const consoleLogger = {
     console.log(
       JSON.stringify({
         severity: "ERROR",
-        message: String(entry),
+        message: messagify(entry),
         ...meta,
       })
     );
