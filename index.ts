@@ -16,8 +16,8 @@ app.listen(port, () => {
 });
 
 app.get("/console", (req, res) => {
-  console.log("console: this is simple info string.");
-  console.log(new Error("console: this is info instance"));
+  console.log("console: this is simple log string.");
+  console.log(new Error("console: this is log instance"));
   console.warn("console: this is simple warn string.");
   console.warn(new Error("console: this is warn instance"));
   console.error("console: this is simple error string.");
