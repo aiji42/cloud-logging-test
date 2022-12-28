@@ -151,46 +151,6 @@ logger.error('error massage')            // 重要度: ERROR | ErrorReporting:
 logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: ○ 
 ```
 
-### カスタム(プレーンテキスト)
-
-```ts
-const severity = winston.format((info) => {
-  info["severity"] = info.level.toUpperCase();
-  return info;
-});
-
-const errorReport = winston.format((info) => {
-  if (info instanceof Error) {
-    info.err = {
-      name: info.name,
-      message: info.message,
-      stack: info.stack,
-    };
-  } else if (info.level === "error") {
-    info["@type"] =
-            "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent";
-  }
-  return info;
-});
-
-export const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    severity(),
-    errorReport(),
-    winston.format.json()
-  ),
-  transports: [new winston.transports.Console()],
-});
-
-logger.info('error massage')             // 重要度: INFO  | ErrorReporting: 
-logger.info(new Error('error message'))  // 重要度: INFO  | ErrorReporting:
-logger.warn('error massage')             // 重要度: WARN  | ErrorReporting: 
-logger.warn(new Error('error message'))  // 重要度: WARN  | ErrorReporting:
-logger.error('error massage')            // 重要度: ERROR | ErrorReporting: ○ 
-logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: ○ 
-```
-
 ## Bunyan
 
 ### カスタムなし
@@ -279,3 +239,68 @@ logger.error(new Error('error message')) // 重要度: ERROR   | ErrorReporting:
 ### カスタム
 
 出力データを構造化できないのでこれ以上のカスタマイズは不可能
+
+
+## 番外編
+
+プレーンテキストもログレベルがerrorのときは、ErrorReportingを生成する
+
+この形式でログが出力されるようにする。
+```
+{
+  "@type": "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
+  "message": "A simple text message"
+}
+```
+
+console.log以外で一番簡単にカスタムできたのは、winston
+
+```ts
+const severity = winston.format((info) => {
+  info["severity"] = info.level.toUpperCase();
+  return info;
+});
+
+const errorReport = winston.format((info) => {
+  if (info instanceof Error) {
+    info.err = {
+      name: info.name,
+      message: info.message,
+      stack: info.stack,
+    };
+  } else if (info.level === "error") {
+    info["@type"] =
+            "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent";
+  }
+  return info;
+});
+
+export const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    severity(),
+    errorReport(),
+    winston.format.json()
+  ),
+  transports: [new winston.transports.Console()],
+});
+
+logger.info('error massage')             // 重要度: INFO  | ErrorReporting: 
+logger.info(new Error('error message'))  // 重要度: INFO  | ErrorReporting:
+logger.warn('error massage')             // 重要度: WARN  | ErrorReporting: 
+logger.warn(new Error('error message'))  // 重要度: WARN  | ErrorReporting:
+logger.error('error massage')            // 重要度: ERROR | ErrorReporting: ○ 
+logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: ○ 
+```
+
+pinoは、デフォルトのメッセージキーが`msg`となっており、`messageKey: 'message'`としてやる必要があるが、  
+そうなると、今度は例外を処理する場合に、`err`と`message`が競合してしまうために、
+```
+{
+  "err": {
+    ...
+  },
+  "message": "...",
+
+}
+```

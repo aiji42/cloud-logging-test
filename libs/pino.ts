@@ -8,7 +8,13 @@ const labels = pino().levels.labels;
 
 export const pinoLoggerSeverity = pino({
   level: "info",
-  mixin: (_, level) => {
+  mixin: (context, level) => {
+    if (labels[level] === "error")
+      return {
+        severity: labels[level].toUpperCase(),
+        "@type":
+          "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
+      };
     return { severity: labels[level].toUpperCase() };
   },
 });
