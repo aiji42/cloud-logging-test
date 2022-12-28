@@ -175,3 +175,21 @@ logger.warn(new Error('error message'))  // 重要度: WARN  | ErrorReporting:
 logger.error('error massage')            // 重要度: ERROR | ErrorReporting:
 logger.error(new Error('error message')) // 重要度: ERROR | ErrorReporting: ○ 
 ```
+
+## loglevel
+
+### カスタムなし
+- severity が設定されていないのでどのログレベルでもDEFAULTになる
+- Errorはテキストに変換されるため ErrorReporting が生成される
+
+```ts
+loglevel.setLevel('info')
+const logger = loglevel;
+
+logger.info('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+logger.info(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+logger.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+logger.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+logger.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
+logger.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○ 
+```
