@@ -43,7 +43,17 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
 ## Console
 
+- severity が設定されていないのでどのログレベルでもDEFAULTになる
+- ErrorはtextPayloadで文字列として表示されるので、ErrorReportが生成される
 
+```ts
+console.info('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+console.info(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+console.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+console.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+console.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
+console.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○
+```
 
 ## Winston
 
