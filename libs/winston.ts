@@ -26,11 +26,7 @@ export const winstonLoggerSeverity = winston.createLogger({
 
 const errorReport = winston.format((info) => {
   if (info instanceof Error) {
-    info.err = {
-      name: info.name,
-      message: info.message,
-      stack: info.stack,
-    };
+    info.message = info.stack;
   }
   return info;
 });
@@ -38,7 +34,6 @@ const errorReport = winston.format((info) => {
 export const winstonLoggerErrorReport = winston.createLogger({
   level: "info",
   format: winston.format.combine(
-    // severity をつけていると Error Reportingに入るのは ERRORのみ
     severity(),
     errorReport(),
     winston.format.json()

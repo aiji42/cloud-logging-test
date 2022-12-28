@@ -12,7 +12,7 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 **スタック トレースまたは例外を含むログエントリ**
 
 この条件に当てはまるのは下記のどちらか
-- プレーンテキストでErrorを出力
+- プレーンテキストでError.prototype.stackを出力
 - 下記形式のオブジェクトデータ
 
 ```
@@ -51,6 +51,35 @@ console.info('error massage')             // 重要度: DEFAULT | ErrorReporting
 console.info(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
 console.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
 console.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting: ○
+console.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
+console.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○
+```
+
+### カスタム
+
+```ts
+const makeLogger = (severity: "INFO" | "WARN" | "ERROR") => {
+  return (entry: any, meta?: Record<string, any>) => {
+    console.log(
+      JSON.stringify({
+        severity,
+        message: entry instanceof Error ? entry.stack : String(entry),
+        ...meta,
+      })
+    );
+  };
+};
+
+const logger = {
+  info: makeLogger("INFO"),
+  warn: makeLogger("WARN"),
+  error: makeLogger("ERROR"),
+};
+
+console.info('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+console.info(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting:
+console.warn('error massage')             // 重要度: DEFAULT | ErrorReporting: 
+console.warn(new Error('error message'))  // 重要度: DEFAULT | ErrorReporting:
 console.error('error massage')            // 重要度: DEFAULT | ErrorReporting:
 console.error(new Error('error message')) // 重要度: DEFAULT | ErrorReporting: ○
 ```
