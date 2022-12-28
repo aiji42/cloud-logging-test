@@ -8,6 +8,7 @@ const labels = pino().levels.labels;
 
 export const pinoLoggerSeverity = pino({
   level: "info",
+  messageKey: "message",
   mixin: (context, level) => {
     if (labels[level] === "error")
       return {
