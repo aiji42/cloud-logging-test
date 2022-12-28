@@ -3,6 +3,7 @@ import { winstonLogger, winstonLoggerErrorReport } from "./libs/winston";
 import { bunyanLogger } from "./libs/bunyan";
 import { pinoLogger, pinoLoggerSeverity } from "./libs/pino";
 import { loglevelLogger } from "./libs/loglevel";
+import { consoleLogger } from "./libs/console";
 
 // https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
@@ -29,6 +30,17 @@ app.get("/console", (req, res) => {
   console.warn(new Error("console: this is warn instance"));
   console.error("console: this is simple error string.");
   console.error(new Error("console: this is error instance"));
+
+  res.send(JSON.stringify({ message: "console" }));
+});
+
+app.get("/console/custom", (req, res) => {
+  consoleLogger.info("console: this is simple info string.");
+  consoleLogger.info(new Error("console: this is info instance"));
+  consoleLogger.warn("console: this is simple warn string.");
+  consoleLogger.warn(new Error("console: this is warn instance"));
+  consoleLogger.error("console: this is simple error string.");
+  consoleLogger.error(new Error("console: this is error instance"));
 
   res.send(JSON.stringify({ message: "console" }));
 });
