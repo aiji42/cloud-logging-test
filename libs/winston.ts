@@ -26,7 +26,11 @@ export const winstonLoggerSeverity = winston.createLogger({
 
 const errorReport = winston.format((info) => {
   if (info instanceof Error) {
-    info.message = info.stack;
+    info.err = {
+      name: info.name,
+      message: info.message,
+      stack: info.stack,
+    };
   }
   return info;
 });
