@@ -42,19 +42,6 @@ app.get("/console/custom", (req, res) => {
   consoleLogger.error("console: this is simple error string.");
   consoleLogger.error(new Error("console: this is error instance"));
 
-  consoleLogger.info("A simple text message info", {
-    "@type":
-      "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
-  });
-  consoleLogger.warn("A simple text message warn", {
-    "@type":
-      "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
-  });
-  consoleLogger.error("A simple text message error", {
-    "@type":
-      "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
-  });
-
   res.send(JSON.stringify({ message: "console" }));
 });
 

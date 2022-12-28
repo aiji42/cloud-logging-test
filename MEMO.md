@@ -32,8 +32,8 @@ https://cloud.google.com/error-reporting/docs/formatting-error-messages?hl=ja
 
 - いくつかあるが、現実的な形式は下記の通り
 
-ただし、この方法だと発生場所等が正しくマークされない
-というかいろんなエラーが一つにまとまってしまう？
+ただし、この方法だと発生場所をマークすることができない。  
+(例外以外のものをErrorReportingに残したい場合はこれを使うと良い)
 ```
 {
   "@type": "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent",
